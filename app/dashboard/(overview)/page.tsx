@@ -2,17 +2,12 @@ import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
 import RevenueChart from "@/app/ui/dashboard/revenue-chart";
 import { lusitana } from "@/app/ui/fonts";
 import {
-  fetchCardData,
-  fetchLatestInvoices,
-  fetchRevenue,
-} from "../../lib/data";
-import CardWrapper, { Card } from "../../ui/dashboard/cards";
-import { Suspense } from "react";
-import {
   CardsSkeleton,
   LatestInvoicesSkeleton,
   RevenueChartSkeleton,
 } from "@/app/ui/skeletons";
+import { Suspense } from "react";
+import CardWrapper from "../../ui/dashboard/cards";
 
 export default async function DashboardPage() {
   return (
