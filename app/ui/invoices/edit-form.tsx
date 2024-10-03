@@ -9,7 +9,14 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { updateInvoice } from "@/app/lib/actions";
+import { updateInvoice, State } from "@/app/lib/actions";
+import { useActionState } from "react";
+import Error from "../field-error";
+
+const initialState: State = {
+  message: null,
+  errors: {},
+};
 
 export default function EditInvoiceForm({
   invoice,
@@ -21,8 +28,10 @@ export default function EditInvoiceForm({
   // similar to (form) => updateInvoice(invoice.id, form) but this encodes the id, ensuring safety of sensitive data
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
 
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+
   return (
-    <form action={updateInvoiceWithId}>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -47,6 +56,7 @@ export default function EditInvoiceForm({
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
+          <Error id="customer-error" errors={state?.errors?.customerId} />
         </div>
 
         {/* Invoice Amount */}
@@ -68,6 +78,7 @@ export default function EditInvoiceForm({
               <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          <Error id="amount-error" errors={state?.errors?.amount} />
         </div>
 
         {/* Invoice Status */}
@@ -111,7 +122,12 @@ export default function EditInvoiceForm({
               </div>
             </div>
           </div>
+          <Error id="status-error" errors={state?.errors?.status} />
         </fieldset>
+        <Error
+          id="create-invoice-error"
+          errors={state?.message ? [state.message] : undefined}
+        />
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
